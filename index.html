@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Aktas App Demo v1.0</title>
+<title>Aktas App – Demo v1.0</title>
 
 <style>
 *{box-sizing:border-box}
@@ -12,8 +12,6 @@ body{
   font-family:Arial,Helvetica,sans-serif;
   background:#0f172a;
   color:#fff;
-  height:100vh;
-  overflow:hidden;
 }
 
 /* LOGIN */
@@ -24,34 +22,53 @@ body{
   justify-content:center;
 }
 .login-box{
-  background:#020617;
-  padding:24px;
-  border-radius:12px;
   width:90%;
   max-width:360px;
+  background:#020617;
+  padding:24px;
+  border-radius:14px;
 }
-.login-box input,button{
+.login-box h2{margin:0 0 8px}
+.login-box input{
+  width:100%;
+  padding:12px;
+  margin:8px 0;
+  border-radius:10px;
+  border:none;
+}
+.login-box button{
   width:100%;
   padding:12px;
   margin-top:10px;
   border:none;
-  border-radius:8px;
+  border-radius:10px;
+  background:#2563eb;
+  color:#fff;
+  font-size:16px;
 }
-button{background:#2563eb;color:#fff}
 
 /* APP */
 #app{display:none;height:100vh}
-header{
+
+/* TOP BAR */
+.topbar{
   height:56px;
+  background:#020617;
   display:flex;
   align-items:center;
-  justify-content:space-between;
   padding:0 12px;
-  background:#020617;
 }
-header button{
-  width:auto;
+.topbar button{
+  background:#2563eb;
+  border:none;
+  color:#fff;
   padding:8px 12px;
+  border-radius:8px;
+}
+.topbar h3{
+  flex:1;
+  text-align:center;
+  margin:0;
 }
 
 /* LAYOUT */
@@ -60,69 +77,71 @@ header button{
   height:calc(100vh - 56px);
 }
 
-/* PANELS */
-.panel{
-  background:#020617;
-  transition:transform .3s ease;
-}
+/* LEFT */
 #left{
   width:260px;
-  position:absolute;
-  left:0;top:56px;bottom:0;
-  transform:translateX(-100%);
-  z-index:5;
-}
-#left.open{transform:translateX(0)}
-#right{
-  width:240px;
-  position:absolute;
-  right:0;top:56px;bottom:0;
-  transform:translateX(100%);
-  z-index:5;
-}
-#right.open{transform:translateX(0)}
-
-#center{
-  flex:1;
-  padding:16px;
-}
-
-/* CHANNELS */
-.channel{
+  background:#020617;
   padding:10px;
-  border-bottom:1px solid #1e293b;
+  display:none;
+  flex-shrink:0;
+}
+#left input, #left button{
+  width:100%;
+  margin-bottom:8px;
+  padding:10px;
+  border-radius:8px;
+  border:none;
+}
+#channels div{
+  padding:8px;
+  background:#1e293b;
+  border-radius:8px;
+  margin-bottom:6px;
   cursor:pointer;
 }
-.channel:hover{background:#1e293b}
 
-/* CHAT */
-#messages{
-  height:calc(100% - 60px);
-  overflow-y:auto;
-}
-.msg{
-  margin-bottom:10px;
-}
-.msg span{color:#60a5fa;font-size:12px}
-.msg p{
-  margin:4px 0 0;
-  background:#1e293b;
-  padding:8px;
-  border-radius:6px;
-}
-
-/* INPUT */
-#inputBox{
-  display:none;
-  margin-top:10px;
+/* CENTER */
+#center{
+  flex:1;
   display:flex;
-  gap:8px;
+  flex-direction:column;
 }
-#inputBox input{
+#messages{
   flex:1;
   padding:10px;
-  border-radius:6px;
+  overflow-y:auto;
+}
+.message{
+  margin-bottom:8px;
+  background:#1e293b;
+  padding:8px;
+  border-radius:8px;
+}
+.input-box{
+  display:none;
+  padding:10px;
+  background:#020617;
+}
+.input-box input{
+  width:80%;
+  padding:10px;
+  border-radius:8px;
   border:none;
+}
+.input-box button{
+  padding:10px;
+  border:none;
+  border-radius:8px;
+  background:#2563eb;
+  color:#fff;
+}
+
+/* RIGHT */
+#right{
+  width:220px;
+  background:#020617;
+  padding:10px;
+  display:none;
 }
 </style>
 </head>
@@ -133,77 +152,120 @@ header button{
 <div id="login">
   <div class="login-box">
     <h2>Demo v1.0</h2>
-    <input id="user" placeholder="admin"/>
-    <input id="pass" type="password" placeholder="admin"/>
+    <p>admin / admin</p>
+    <input id="user" placeholder="Kullanıcı adı">
+    <input id="pass" type="password" placeholder="Şifre">
     <button onclick="login()">Giriş</button>
   </div>
 </div>
 
 <!-- APP -->
 <div id="app">
-<header>
-  <button onclick="toggleLeft()">☰</button>
-  <b id="title">Kanal seç</b>
-  <button onclick="toggleRight()">Aktifler</button>
-</header>
+  <div class="topbar">
+    <button onclick="toggleLeft()">☰</button>
+    <h3 id="title">Kanal yok</h3>
+    <button onclick="logout()">Çıkış</button>
+  </div>
 
-<div class="container">
-  <div id="center">
-    <div id="messages">Bir kanal seç.</div>
+  <div class="container">
+    <div id="left">
+      <input id="channelName" placeholder="Kanal adı">
+      <button onclick="createChannel()">+ Kanal Oluştur</button>
+      <div id="channels"></div>
+    </div>
 
-    <div id="inputBox">
-      <input id="msgInput" placeholder="Mesaj yaz..."/>
-      <button onclick="sendMsg()">Gönder</button>
+    <div id="center">
+      <div id="messages"></div>
+      <div class="input-box" id="inputBox">
+        <input id="msgInput" placeholder="Mesaj yaz...">
+        <button onclick="sendMsg()">Gönder</button>
+      </div>
+    </div>
+
+    <div id="right">
+      <h4>Aktifler</h4>
+      <div>@admin</div>
     </div>
   </div>
 </div>
 
-<div id="left" class="panel">
-  <div class="channel" onclick="openChannel('genel')"># genel</div>
-</div>
-
-<div id="right" class="panel">
-  <div style="padding:12px"><b>Aktifler</b><br>@admin</div>
-</div>
-</div>
-
 <script>
-let currentChannel=null;
+let currentChannel = null;
+let channels = {};
 
 function login(){
   if(user.value==="admin" && pass.value==="admin"){
-    login.style.display="none";
-    app.style.display="block";
-  }else alert("Hatalı");
+    localStorage.setItem("login","1");
+    showApp();
+  }else{
+    alert("Hatalı giriş");
+  }
+}
+
+function showApp(){
+  login.style.display="none";
+  app.style.display="block";
+}
+
+function logout(){
+  localStorage.removeItem("login");
+  location.reload();
+}
+
+if(localStorage.getItem("login")==="1"){
+  showApp();
 }
 
 function toggleLeft(){
-  left.classList.toggle("open");
+  left.style.display = left.style.display==="block" ? "none":"block";
 }
-function toggleRight(){
-  right.classList.toggle("open");
+
+function createChannel(){
+  const name = channelName.value.trim();
+  if(!name) return;
+  channels[name]=[];
+  renderChannels();
+  openChannel(name);
+  channelName.value="";
+}
+
+function renderChannels(){
+  channelsDiv = document.getElementById("channels");
+  channelsDiv.innerHTML="";
+  Object.keys(channels).forEach(c=>{
+    const d=document.createElement("div");
+    d.innerText=c;
+    d.onclick=()=>openChannel(c);
+    channelsDiv.appendChild(d);
+  });
 }
 
 function openChannel(name){
   currentChannel=name;
-  title.innerText="# "+name;
-  left.classList.remove("open");
-
-  messages.innerHTML="";
+  title.innerText=name;
+  left.style.display="none";
+  right.style.display="block";
   inputBox.style.display="flex";
+  renderMessages();
 }
 
 function sendMsg(){
-  if(!msgInput.value)return;
-  const d=document.createElement("div");
-  d.className="msg";
-  d.innerHTML="<span>@admin</span><p>"+msgInput.value+"</p>";
-  d.oncontextmenu=e=>{
-    e.preventDefault();
-    if(confirm("Silinsin mi?")) d.remove();
-  }
-  messages.appendChild(d);
+  if(!currentChannel) return;
+  const text=msgInput.value.trim();
+  if(!text) return;
+  channels[currentChannel].push(text);
   msgInput.value="";
+  renderMessages();
+}
+
+function renderMessages(){
+  messages.innerHTML="";
+  channels[currentChannel].forEach(m=>{
+    const d=document.createElement("div");
+    d.className="message";
+    d.innerText="@admin: "+m;
+    messages.appendChild(d);
+  });
 }
 </script>
 
