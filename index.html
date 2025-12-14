@@ -1,145 +1,128 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Aktaş App – Demo v1.0</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Aktas App Demo v1.0</title>
 
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
+*{box-sizing:border-box}
 body{
+  margin:0;
   font-family:Arial,Helvetica,sans-serif;
-  background:linear-gradient(160deg,#0b1220,#05080f);
+  background:#0f172a;
   color:#fff;
   height:100vh;
   overflow:hidden;
 }
 
-/* LOGIN STATE */
-body.logged #login{display:none!important}
-body.logged #app{display:block!important}
-
 /* LOGIN */
 #login{
-  position:fixed; inset:0;
-  display:flex; align-items:center; justify-content:center;
+  height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
 .login-box{
-  width:90%; max-width:360px;
-  background:rgba(255,255,255,.06);
-  border-radius:16px;
+  background:#020617;
   padding:24px;
-  animation:fade .3s;
+  border-radius:12px;
+  width:90%;
+  max-width:360px;
 }
-.login-box h1{margin-bottom:6px}
-.login-box p{opacity:.7;margin-bottom:16px;font-size:14px}
-.login-box input{
-  width:100%; padding:12px;
-  margin-bottom:12px;
-  border-radius:10px;
-  border:none; outline:none;
+.login-box input,button{
+  width:100%;
+  padding:12px;
+  margin-top:10px;
+  border:none;
+  border-radius:8px;
 }
-.login-box button{
-  width:100%; padding:12px;
-  border:none; border-radius:12px;
-  background:#3b6cff; color:#fff;
-  font-size:16px;
-}
+button{background:#2563eb;color:#fff}
 
 /* APP */
-#app{display:none;height:100%}
-
-/* HEADER */
-.header{
+#app{display:none;height:100vh}
+header{
   height:56px;
   display:flex;
   align-items:center;
   justify-content:space-between;
   padding:0 12px;
-  background:rgba(0,0,0,.35);
+  background:#020617;
 }
-.header button{
-  background:#3b6cff;
-  border:none;
-  color:#fff;
+header button{
+  width:auto;
   padding:8px 12px;
-  border-radius:10px;
 }
 
 /* LAYOUT */
-.main{
+.container{
   display:flex;
-  height:calc(100% - 56px);
+  height:calc(100vh - 56px);
 }
 
-/* LEFT PANEL */
+/* PANELS */
+.panel{
+  background:#020617;
+  transition:transform .3s ease;
+}
 #left{
   width:260px;
-  background:rgba(255,255,255,.04);
-  padding:12px;
-  position:fixed;
-  top:56px; bottom:0; left:-260px;
-  transition:.25s;
-  z-index:10;
+  position:absolute;
+  left:0;top:56px;bottom:0;
+  transform:translateX(-100%);
+  z-index:5;
 }
-#left.active{left:0}
-#left button{
-  width:100%; padding:10px;
-  border:none; border-radius:10px;
-  background:#3b6cff; color:#fff;
-  margin-bottom:12px;
+#left.open{transform:translateX(0)}
+#right{
+  width:240px;
+  position:absolute;
+  right:0;top:56px;bottom:0;
+  transform:translateX(100%);
+  z-index:5;
 }
-.channel{
-  padding:10px;
-  border-radius:10px;
-  margin-bottom:6px;
-  background:rgba(255,255,255,.08);
-}
+#right.open{transform:translateX(0)}
 
-/* CENTER */
 #center{
   flex:1;
-  padding:12px;
+  padding:16px;
+}
+
+/* CHANNELS */
+.channel{
+  padding:10px;
+  border-bottom:1px solid #1e293b;
+  cursor:pointer;
+}
+.channel:hover{background:#1e293b}
+
+/* CHAT */
+#messages{
+  height:calc(100% - 60px);
   overflow-y:auto;
 }
-.message{
-  background:#3b6cff;
-  padding:10px;
-  border-radius:12px;
-  margin-bottom:8px;
-  animation:fade .2s;
+.msg{
+  margin-bottom:10px;
 }
-.message small{opacity:.7}
+.msg span{color:#60a5fa;font-size:12px}
+.msg p{
+  margin:4px 0 0;
+  background:#1e293b;
+  padding:8px;
+  border-radius:6px;
+}
 
-/* SEND */
-#sendBox{
+/* INPUT */
+#inputBox{
   display:none;
+  margin-top:10px;
+  display:flex;
+  gap:8px;
+}
+#inputBox input{
+  flex:1;
   padding:10px;
-  background:rgba(0,0,0,.35);
-}
-#sendBox input{
-  width:78%; padding:10px;
-  border-radius:10px; border:none;
-}
-#sendBox button{
-  width:20%;
-  padding:10px;
-  border:none; border-radius:10px;
-  background:#3b6cff; color:#fff;
-}
-
-/* RIGHT */
-#right{
-  width:220px;
-  background:rgba(255,255,255,.04);
-  padding:12px;
-  display:none;
-}
-
-/* ANIM */
-@keyframes fade{
-  from{opacity:0;transform:translateY(10px)}
-  to{opacity:1;transform:none}
+  border-radius:6px;
+  border:none;
 }
 </style>
 </head>
@@ -149,125 +132,80 @@ body.logged #app{display:block!important}
 <!-- LOGIN -->
 <div id="login">
   <div class="login-box">
-    <h1>Demo v1.0</h1>
-    <p>Giriş: admin / admin</p>
-    <input id="user" value="admin" placeholder="Kullanıcı adı">
-    <input id="pass" type="password" value="admin" placeholder="Şifre">
-    <button onclick="doLogin()">Giriş</button>
+    <h2>Demo v1.0</h2>
+    <input id="user" placeholder="admin"/>
+    <input id="pass" type="password" placeholder="admin"/>
+    <button onclick="login()">Giriş</button>
   </div>
 </div>
 
 <!-- APP -->
 <div id="app">
-  <div class="header">
-    <button onclick="toggleLeft()">☰</button>
-    <div id="title">Kanal yok</div>
-    <button onclick="logout()">Çıkış</button>
-  </div>
+<header>
+  <button onclick="toggleLeft()">☰</button>
+  <b id="title">Kanal seç</b>
+  <button onclick="toggleRight()">Aktifler</button>
+</header>
 
-  <div id="left">
-    <button onclick="createChannel()">+ Kanal Oluştur</button>
-    <div id="channels"></div>
-  </div>
+<div class="container">
+  <div id="center">
+    <div id="messages">Bir kanal seç.</div>
 
-  <div class="main">
-    <div id="center"></div>
-    <div id="right">
-      <h3>Aktifler</h3>
-      <div>@admin</div>
+    <div id="inputBox">
+      <input id="msgInput" placeholder="Mesaj yaz..."/>
+      <button onclick="sendMsg()">Gönder</button>
     </div>
-  </div>
-
-  <div id="sendBox">
-    <input id="msg" placeholder="Mesaj yaz...">
-    <button onclick="send()">Gönder</button>
   </div>
 </div>
 
+<div id="left" class="panel">
+  <div class="channel" onclick="openChannel('genel')"># genel</div>
+</div>
+
+<div id="right" class="panel">
+  <div style="padding:12px"><b>Aktifler</b><br>@admin</div>
+</div>
+</div>
+
 <script>
-/* ---------- STATE ---------- */
-let current=null;
-let data=JSON.parse(localStorage.getItem("demo_channels")||"{}");
+let currentChannel=null;
 
-/* ---------- LOGIN ---------- */
-function doLogin(){
+function login(){
   if(user.value==="admin" && pass.value==="admin"){
-    document.body.classList.add("logged");
-    localStorage.setItem("logged","1");
-    loadChannels();
-  }else alert("Hatalı giriş");
+    login.style.display="none";
+    app.style.display="block";
+  }else alert("Hatalı");
 }
 
-if(localStorage.getItem("logged")==="1"){
-  document.body.classList.add("logged");
-}
-
-/* ---------- LOGOUT ---------- */
-function logout(){
-  localStorage.removeItem("logged");
-  location.reload();
-}
-
-/* ---------- LEFT ---------- */
 function toggleLeft(){
-  left.classList.toggle("active");
+  left.classList.toggle("open");
+}
+function toggleRight(){
+  right.classList.toggle("open");
 }
 
-/* ---------- CHANNEL ---------- */
-function createChannel(){
-  let name=prompt("Kanal adı");
-  let uname=prompt("@kanal");
-  if(!name||!uname)return;
-  data[uname]={name, msgs:[]};
-  save();
-  loadChannels();
+function openChannel(name){
+  currentChannel=name;
+  title.innerText="# "+name;
+  left.classList.remove("open");
+
+  messages.innerHTML="";
+  inputBox.style.display="flex";
 }
 
-function loadChannels(){
-  channels.innerHTML="";
-  for(let k in data){
-    let d=document.createElement("div");
-    d.className="channel";
-    d.innerText=data[k].name+" ("+k+")";
-    d.onclick=()=>openChannel(k);
-    channels.appendChild(d);
+function sendMsg(){
+  if(!msgInput.value)return;
+  const d=document.createElement("div");
+  d.className="msg";
+  d.innerHTML="<span>@admin</span><p>"+msgInput.value+"</p>";
+  d.oncontextmenu=e=>{
+    e.preventDefault();
+    if(confirm("Silinsin mi?")) d.remove();
   }
-}
-
-function openChannel(k){
-  current=k;
-  title.innerText=data[k].name;
-  center.innerHTML="";
-  data[k].msgs.forEach((m,i)=>{
-    let d=document.createElement("div");
-    d.className="message";
-    d.innerHTML="<small>@admin</small><br>"+m;
-    d.oncontextmenu=e=>{
-      e.preventDefault();
-      if(confirm("Silinsin mi?")){
-        data[k].msgs.splice(i,1);
-        save(); openChannel(k);
-      }
-    }
-    center.appendChild(d);
-  });
-  sendBox.style.display="flex";
-  right.style.display="block";
-  left.classList.remove("active");
-}
-
-/* ---------- MESSAGE ---------- */
-function send(){
-  if(!current)return;
-  if(!msg.value)return;
-  data[current].msgs.push(msg.value);
-  msg.value="";
-  save(); openChannel(current);
-}
-
-function save(){
-  localStorage.setItem("demo_channels",JSON.stringify(data));
+  messages.appendChild(d);
+  msgInput.value="";
 }
 </script>
+
 </body>
 </html>
