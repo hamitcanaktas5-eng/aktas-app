@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aktaş App – Demo Test</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      height: 100vh;
+      background: linear-gradient(135deg, #0f172a, #020617);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      padding: 32px;
+      width: 90%;
+      max-width: 360px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+      animation: fadeIn 0.6s ease;
+    }
+
+    h1 {
+      margin-top: 0;
+      margin-bottom: 8px;
+    }
+
+    p {
+      opacity: 0.8;
+      font-size: 14px;
+      margin-bottom: 24px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 12px;
+      border-radius: 10px;
+      border: none;
+      outline: none;
+      background: #020617;
+      color: white;
+      font-size: 16px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      font-size: 16px;
+      cursor: pointer;
+      background: #2563eb;
+      color: white;
+      transition: 0.2s;
+    }
+
+    button:hover {
+      background: #1d4ed8;
+    }
+
+    .ok {
+      text-align: center;
+      margin-top: 20px;
+      color: #22c55e;
+      display: none;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <h1>Demo v1.0</h1>
+    <p>GitHub Pages test ekranı</p>
+
+    <input id="user" placeholder="Kullanıcı adı" value="admin">
+    <input id="pass" type="password" placeholder="Şifre" value="admin">
+
+    <button onclick="login()">Giriş</button>
+
+    <div class="ok" id="ok">✅ Giriş çalışıyor, Pages OK</div>
+  </div>
+
+  <script>
+    function login() {
+      const u = document.getElementById("user").value;
+      const p = document.getElementById("pass").value;
+
+      if (u === "admin" && p === "admin") {
+        document.getElementById("ok").style.display = "block";
+      } else {
+        alert("Hatalı giriş");
+      }
+    }
+  </script>
+
+</body>
+</html>
