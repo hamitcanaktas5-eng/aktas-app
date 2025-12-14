@@ -1,121 +1,265 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Aktaş App – Demo Test</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Aktaş App – Demo v1.0</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-      font-family: Arial, Helvetica, sans-serif;
-    }
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:Arial,Helvetica,sans-serif;
+  background:linear-gradient(160deg,#0b1220,#05080f);
+  color:#fff;
+  height:100vh;
+  overflow:hidden;
+}
 
-    body {
-      margin: 0;
-      height: 100vh;
-      background: linear-gradient(135deg, #0f172a, #020617);
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+/* ---------- LOGIN ---------- */
+#login{
+  position:fixed; inset:0;
+  display:flex; align-items:center; justify-content:center;
+}
+.login-box{
+  width:90%; max-width:360px;
+  background:rgba(255,255,255,.05);
+  border-radius:16px;
+  padding:24px;
+  animation:fadeIn .4s ease;
+}
+.login-box h1{margin-bottom:6px}
+.login-box p{opacity:.7;margin-bottom:16px;font-size:14px}
+.login-box input{
+  width:100%; padding:12px;
+  margin-bottom:12px;
+  border-radius:10px;
+  border:none; outline:none;
+}
+.login-box button{
+  width:100%; padding:12px;
+  border:none; border-radius:12px;
+  background:#3b6cff; color:#fff;
+  font-size:16px;
+}
 
-    .card {
-      background: rgba(255,255,255,0.05);
-      backdrop-filter: blur(10px);
-      border-radius: 16px;
-      padding: 32px;
-      width: 90%;
-      max-width: 360px;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.6);
-      animation: fadeIn 0.6s ease;
-    }
+/* ---------- APP ---------- */
+#app{display:none;height:100%}
 
-    h1 {
-      margin-top: 0;
-      margin-bottom: 8px;
-    }
+/* HEADER */
+.header{
+  height:56px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 12px;
+  background:rgba(0,0,0,.3);
+}
+.header button{
+  background:#3b6cff;
+  border:none;
+  color:#fff;
+  padding:8px 12px;
+  border-radius:10px;
+}
 
-    p {
-      opacity: 0.8;
-      font-size: 14px;
-      margin-bottom: 24px;
-    }
+/* LAYOUT */
+.main{
+  display:flex;
+  height:calc(100% - 56px);
+}
 
-    input {
-      width: 100%;
-      padding: 12px;
-      margin-bottom: 12px;
-      border-radius: 10px;
-      border: none;
-      outline: none;
-      background: #020617;
-      color: white;
-      font-size: 16px;
-    }
+/* LEFT PANEL */
+#left{
+  width:260px;
+  background:rgba(255,255,255,.03);
+  padding:12px;
+  position:fixed;
+  top:56px; bottom:0; left:-260px;
+  transition:.3s;
+  z-index:10;
+}
+#left.active{left:0}
+#left input{
+  width:100%; padding:10px;
+  border-radius:10px; border:none;
+  margin-bottom:10px;
+}
+#left button{
+  width:100%; padding:10px;
+  border:none; border-radius:10px;
+  background:#3b6cff; color:#fff;
+  margin-bottom:12px;
+}
+.channel{
+  padding:10px;
+  border-radius:10px;
+  margin-bottom:6px;
+  background:rgba(255,255,255,.05);
+}
 
-    button {
-      width: 100%;
-      padding: 12px;
-      border-radius: 10px;
-      border: none;
-      font-size: 16px;
-      cursor: pointer;
-      background: #2563eb;
-      color: white;
-      transition: 0.2s;
-    }
+/* CENTER */
+#center{
+  flex:1;
+  padding:12px;
+  overflow-y:auto;
+}
+.message{
+  background:#3b6cff;
+  padding:10px;
+  border-radius:12px;
+  margin-bottom:8px;
+  animation:fadeIn .2s;
+}
+.message small{opacity:.7}
 
-    button:hover {
-      background: #1d4ed8;
-    }
+/* MESSAGE INPUT */
+#sendBox{
+  display:none;
+  padding:10px;
+  background:rgba(0,0,0,.3);
+}
+#sendBox input{
+  width:80%; padding:10px;
+  border-radius:10px; border:none;
+}
+#sendBox button{
+  width:18%;
+  padding:10px;
+  border:none; border-radius:10px;
+  background:#3b6cff; color:#fff;
+}
 
-    .ok {
-      text-align: center;
-      margin-top: 20px;
-      color: #22c55e;
-      display: none;
-    }
+/* RIGHT PANEL */
+#right{
+  width:220px;
+  background:rgba(255,255,255,.03);
+  padding:12px;
+  display:none;
+}
+#right h3{margin-bottom:8px}
 
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-  </style>
+/* ANIM */
+@keyframes fadeIn{
+  from{opacity:0;transform:translateY(10px)}
+  to{opacity:1;transform:none}
+}
+</style>
 </head>
 <body>
 
-  <div class="card">
+<!-- LOGIN -->
+<div id="login">
+  <div class="login-box">
     <h1>Demo v1.0</h1>
-    <p>GitHub Pages test ekranı</p>
-
-    <input id="user" placeholder="Kullanıcı adı" value="admin">
-    <input id="pass" type="password" placeholder="Şifre" value="admin">
-
+    <p>admin / admin</p>
+    <input id="user" placeholder="Kullanıcı adı">
+    <input id="pass" type="password" placeholder="Şifre">
     <button onclick="login()">Giriş</button>
+  </div>
+</div>
 
-    <div class="ok" id="ok">✅ Giriş çalışıyor, Pages OK</div>
+<!-- APP -->
+<div id="app">
+  <div class="header">
+    <button onclick="toggleLeft()">☰</button>
+    <div id="title">Kanal yok</div>
+    <button onclick="logout()">Çıkış</button>
   </div>
 
-  <script>
-    function login() {
-      const u = document.getElementById("user").value;
-      const p = document.getElementById("pass").value;
+  <div id="left">
+    <input id="search" placeholder="Kanal ara">
+    <button onclick="createChannel()">+ Kanal Oluştur</button>
+    <div id="channels"></div>
+  </div>
 
-      if (u === "admin" && p === "admin") {
-        document.getElementById("ok").style.display = "block";
-      } else {
-        alert("Hatalı giriş");
+  <div class="main">
+    <div id="center"></div>
+    <div id="right">
+      <h3>Aktifler</h3>
+      <div>admin</div>
+    </div>
+  </div>
+
+  <div id="sendBox">
+    <input id="msg" placeholder="Mesaj yaz...">
+    <button onclick="send()">Gönder</button>
+  </div>
+</div>
+
+<script>
+let currentChannel=null;
+let channels=JSON.parse(localStorage.getItem("channels")||"{}");
+
+function login(){
+  if(user.value==="admin" && pass.value==="admin"){
+    login.style.display="none";
+    app.style.display="block";
+    loadChannels();
+  }else alert("Hatalı");
+}
+
+function logout(){
+  location.reload();
+}
+
+function toggleLeft(){
+  left.classList.toggle("active");
+}
+
+function createChannel(){
+  let name=prompt("Kanal adı");
+  let uname=prompt("@kanal");
+  if(!name||!uname) return;
+  channels[uname]={name, msgs:[]};
+  save();
+  loadChannels();
+}
+
+function loadChannels(){
+  channelsDiv.innerHTML="";
+  for(let k in channels){
+    let d=document.createElement("div");
+    d.className="channel";
+    d.innerText=channels[k].name+" ("+k+")";
+    d.onclick=()=>openChannel(k);
+    channelsDiv.appendChild(d);
+  }
+}
+
+function openChannel(k){
+  currentChannel=k;
+  title.innerText=channels[k].name;
+  center.innerHTML="";
+  channels[k].msgs.forEach((m,i)=>{
+    let d=document.createElement("div");
+    d.className="message";
+    d.innerHTML="<small>@admin</small><br>"+m;
+    d.oncontextmenu=e=>{
+      e.preventDefault();
+      if(confirm("Silinsin mi?")){
+        channels[k].msgs.splice(i,1);
+        save(); openChannel(k);
       }
     }
-  </script>
+    center.appendChild(d);
+  });
+  sendBox.style.display="flex";
+  right.style.display="block";
+  left.classList.remove("active");
+}
 
+function send(){
+  if(!currentChannel) return;
+  channels[currentChannel].msgs.push(msg.value);
+  msg.value="";
+  save(); openChannel(currentChannel);
+}
+
+function save(){
+  localStorage.setItem("channels",JSON.stringify(channels));
+}
+
+const channelsDiv=document.getElementById("channels");
+</script>
 </body>
 </html>
